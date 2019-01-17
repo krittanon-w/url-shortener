@@ -1,0 +1,32 @@
+const config = require('./config.js')
+const express = require('express')
+
+
+
+// express init
+const app = express()
+
+app.get('/:shortUrl', (req, res) => { 
+    res.redirect('http://www.google.com')
+})
+
+app.get('/api/url/:shortUrl', (req, res) => { 
+    res.send('get url info')
+})
+
+app.post('/api/short', (req, res) => { 
+    res.send('create shirt url by original url')
+})
+
+app.post('/api/alias', (req, res) => { 
+    res.send('create short url by alias')
+})
+
+app.post('/api/internal/list', (req, res) => { 
+    res.send('list all of url in db')
+})
+
+// start server
+app.listen(config.server.port, () => {
+    console.log(`Express is listening on port ${config.server.port}`)
+})

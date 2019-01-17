@@ -1,0 +1,26 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "start:dev": "nodemon node src/index.js",
+    "dev": "npm run start:dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krittanon-w/url-shortener.git"
+  },
+  "author": "krittanon.w",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/krittanon-w/url-shortener/issues"
+  },
+  "homepage": "https://github.com/krittanon-w/url-shortener#readme",
+  "dependencies": {
+    "express": "4.16.4",
+    "nodemon": "1.18.9"
+  }
+}
