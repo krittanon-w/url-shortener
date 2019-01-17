@@ -1,5 +1,6 @@
 const config = require('./config.js')
 const express = require('express')
+const MongoClient = require('./share/mongo-client.js')
 
 
 
@@ -29,4 +30,15 @@ app.post('/api/internal/list', (req, res) => {
 // start server
 app.listen(config.server.port, () => {
     console.log(`Express is listening on port ${config.server.port}`)
+})
+
+MongoClient.connect((error, client) => {
+    if (error) {
+        console.log("MongoClient: error", error.toString())
+    }
+    else {
+        let collections = MongoClient.getCollections()
+        console.log("MongoClient: connected")
+        console.log("MongoClient: collections", collections)
+    }
 })
