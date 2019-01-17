@@ -1,44 +1,29 @@
 const express = require('express')
+const bodyParser = require('body-parser')
 const MongoClient = require('./share/mongo-client.js')
-
-
+const services = require('./services/routes.js')
 
 // express init
 const app = express()
 const config = require('./config.js').server
 
-app.get('/:shortUrl', (req, res) => { 
-    res.redirect('http://www.google.com')
-})
+app.use(bodyParser.json())
+app.use(services)
 
-app.get('/api/url/:shortUrl', (req, res) => { 
-    res.send('get url info')
-})
-
-app.post('/api/short', (req, res) => { 
-    res.send('create shirt url by original url')
-})
-
-app.post('/api/alias', (req, res) => { 
-    res.send('create short url by alias')
-})
-
-app.post('/api/internal/list', (req, res) => { 
-    res.send('list all of url in db')
-})
-
-// start server
-app.listen(config.port, () => {
-    console.log(`Express is listening on port ${config.port}`)
-})
-
+// create mongodb connection
 MongoClient.connect((error, client) => {
     if (error) {
         console.log("MongoClient: error", error.toString())
     }
     else {
+        // print database informatio
         let collections = MongoClient.getCollections()
         console.log("MongoClient: connected")
         console.log("MongoClient: collections", collections)
+
+        // start server
+        app.listen(config.port, () => {
+            console.log(`Express is listening on port ${config.port}`)
+        })
     }
 })
