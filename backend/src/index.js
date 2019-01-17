@@ -1,4 +1,3 @@
-const config = require('./config.js')
 const express = require('express')
 const MongoClient = require('./share/mongo-client.js')
 
@@ -6,6 +5,7 @@ const MongoClient = require('./share/mongo-client.js')
 
 // express init
 const app = express()
+const config = require('./config.js').server
 
 app.get('/:shortUrl', (req, res) => { 
     res.redirect('http://www.google.com')
@@ -28,8 +28,8 @@ app.post('/api/internal/list', (req, res) => {
 })
 
 // start server
-app.listen(config.server.port, () => {
-    console.log(`Express is listening on port ${config.server.port}`)
+app.listen(config.port, () => {
+    console.log(`Express is listening on port ${config.port}`)
 })
 
 MongoClient.connect((error, client) => {

@@ -1,14 +1,15 @@
 const MongoClient = require('mongodb').MongoClient
 
-// singleton connection
-const database = 'url-shortener'
-const url = `mongodb://localhost:27017/${database}`
-const options = { 
-    useNewUrlParser: true 
-}
+// mongodb init
+const config = require('./../config.js').mongodb
+const url = config.url
+const database = config.database
+const options = config.options
 
+// singleton connection
 let mongoClient = null
 let currentDb = null
+let collections = 123
 
 const connect = (done) => {
     MongoClient.connect(url, options)
@@ -17,7 +18,17 @@ const connect = (done) => {
             mongoClient = client
             currentDb = client.db(database)
         
-            done(null, mongoClient)
+            // push collection to collections
+            currentDb.listCollections().toArray((error, collectionList) => {
+                if (error) {
+                    console.log('MONGO Error:', error)
+                }
+                else {
+                    collections = collectionList.map((col) => col.name)
+                }
+                done(null, mongoClient)
+            })
+            
         })
         .catch((error) => {
             done(error, null)
@@ -33,23 +44,7 @@ const getDatabase = () => {
 }
 
 const getCollections = () => {
-    if (getInstance() != null) {
-        currentDb.listCollections().toArray((error, collections) => {
-            if (error) {
-                console.log('MONGO Error:', error)
-            }
-            else {
-                if (collections === null) {
-                    collections = []
-                }
-                // console.log(`MONGO Collections: [${collections.map((col) => col.name)}]`)
-                return collections.map((col) => col.name)
-            }
-        })
-    }
-    else {
-        return 123
-    }
+    return getInstance() == null ? null : collections
 }
 
 module.exports = {
