@@ -14,29 +14,37 @@ const toShortId = (longHexId) => {
 }
 
 module.exports = router.post('/short', (req, res, next) => {
-    let input = req.body
+    try{
+        let input = req.body
 
-    // generate mongo object id
-    let objectId = new ObjectID()
-    
-    // url document
-    let doc = {
-        _id: objectId,
-        shortUrl: toShortId(objectId.toHexString()),
-        originalUrl: input.originalUrl
-    }
-
-    // insert to database
-    BaseModel.insertOne(doc, (error, result) => {
-        if (error) {
-            return res.status(500).json({
-                success: false,
-                message: error.message
-            })
+        // generate mongo object id
+        let objectId = new ObjectID()
+        
+        // url document
+        let doc = {
+            _id: objectId,
+            shortUrl: toShortId(objectId.toHexString()),
+            originalUrl: input.originalUrl
         }
-        return res.json({
-            success: true,
-            data: result
+
+        // insert to database
+        BaseModel.insertOne(doc, (error, result) => {
+            if (error) {
+                return res.status(500).json({
+                    success: false,
+                    message: error.message
+                })
+            }
+            return res.json({
+                success: true,
+                data: result
+            })
         })
-    })
+    }
+    catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
 })
