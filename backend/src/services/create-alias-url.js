@@ -13,17 +13,42 @@ module.exports = router.post('/alias', (req, res, next) => {
         originalUrl: input.originalUrl
     }
 
-    // insert to database
-    BaseModel.insertOne(doc, (error, result) => {
+    let query = {
+        shortUrl: input.aliasUrl
+    }
+
+    // check alias is exist or not
+    BaseModel.findOne(query, (error, findResult) => {
         if (error) {
             return res.status(500).json({
                 success: false,
                 message: error.message
             })
         }
-        return res.json({
-            success: true,
-            data: result
-        })
+        else {
+            // check alias is exist
+            if (findResult != null) {
+                return res.json({
+                    success: false,
+                    message: "this alias has taken"
+                })
+            }
+            else {
+                // insert to database
+                BaseModel.insertOne(doc, (error, result) => {
+                    if (error) {
+                        return res.status(500).json({
+                            success: false,
+                            message: error.message
+                        })
+                    }
+                    return res.json({
+                        success: true,
+                        data: result
+                    })
+                })
+            }
+        }
     })
+
 })
