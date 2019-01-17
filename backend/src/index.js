@@ -23,7 +23,7 @@ MongoClient.connect((error, client) => {
 
         // start server
         app.listen(config.port, () => {
-            console.log(`Express is listening on port ${config.port}`)
+            console.log(`Express Server: is listening on port ${config.port}`)
         })
     }
 })
