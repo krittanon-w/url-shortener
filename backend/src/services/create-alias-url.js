@@ -1,8 +1,25 @@
 const Router = require('express').Router
+const BaseModel = require('./../share/base-model.js')
 
 // init
 const router = new Router()
 
 module.exports = router.post('/alias', (req, res, next) => {
-    res.send('create alias url')
+    let input = req.body
+    let doc = {
+        shortUrl: input.aliasUrl,
+        originalUrl: input.originalUrl
+    }
+    BaseModel.insertOne(doc, (error, result) => {
+        if (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message
+            })
+        }
+        return res.json({
+            success: true,
+            data: result
+        })
+    })
 })
