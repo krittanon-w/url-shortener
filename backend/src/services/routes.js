@@ -11,10 +11,13 @@ const getAllUrl = require('./get-all-url.js')
 
 // inject 
 const prefixUrl = '/api'
+// api
 router.use(prefixUrl, createShortUrl)
 router.use(prefixUrl, createAliasUrl)
 router.use(prefixUrl, getAllUrl)
-router.use(prefixUrl, getOriginalUrl)
+
+// route
+router.use(getOriginalUrl)
 
 // if no path matched return 404 not found
 router.use('*', (req, res, next) => {

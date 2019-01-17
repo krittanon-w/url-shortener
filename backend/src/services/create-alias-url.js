@@ -35,7 +35,7 @@ module.exports = router.post('/alias', (req, res, next) => {
             }
             else {
                 // insert to database
-                BaseModel.insertOne(doc, (error, result) => {
+                BaseModel.insertOne(doc, (error, insertResult) => {
                     if (error) {
                         return res.status(500).json({
                             success: false,
@@ -44,7 +44,7 @@ module.exports = router.post('/alias', (req, res, next) => {
                     }
                     return res.json({
                         success: true,
-                        data: result
+                        data: insertResult
                     })
                 })
             }
