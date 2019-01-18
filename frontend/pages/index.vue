@@ -4,22 +4,35 @@
       <h1 class="title">
         url-shortener
       </h1>
-      <div class="form slideInUp">
+      <div class="form">
         <el-form :inline="false" :model="form" class="demo-form-inline">
-          <el-form-item>
-            <el-input placeholder="Paste a link to shorten it e.g. http://google.com " v-model="form.originalUrl">
+          <div class="animated fadeInUp">
+            <el-form-item>
+              <el-input type="info" placeholder="Paste a link to shorten it e.g. http://google.com " v-model="form.originalUrl">
+                <template class="prepend" slot="prepend">link</template>
+              </el-input>
+            </el-form-item>
+
+            <el-form-item>
+              <el-input type="info" placeholder="name your the link *optional e.g. google" v-model="form.aliasUrl">
+                <template class="prepend" slot="prepend">alias</template>
+              </el-input>
+            </el-form-item>
+
+            <el-form-item>
+              <el-button type="info" @click="createUrl" :disabled="true">SHORTEN</el-button>
+            </el-form-item>
+          </div>
+
+          <el-form-item v-if="form.shortUrl != ''" class="animated fadeInUp">
+            <el-input type="info" placeholder="alias of the link *optional e.g. google" v-model="form.shortUrl">
+              <template class="prepend" slot="prepend">short link</template>
             </el-input>
           </el-form-item>
 
-          <el-form-item>
-            <el-input placeholder="alias of the link *optional e.g. google" v-model="form.aliasUrl">
-            </el-input>
-          </el-form-item>
-
-          <el-form-item>
-            <el-button type="primary" @click="createUrl">SHORTEN</el-button>
-          </el-form-item>
         </el-form>
+      </div>
+      <div class="form">
       </div>
     </div>
   </section>
@@ -27,17 +40,19 @@
 
 <script>
 import Logo from '~/components/Logo.vue'
+import axios from '~/plugins/axios.js'
 
 export default {
   transition: 'fadeIn',
   components: {
-    Logo
+
   },
   data() {
     return {
       form: {
         originalUrl: '',
-        aliasUrl: ''
+        aliasUrl: '',
+        shortUrl: ''
       }
     }
   },
@@ -52,9 +67,43 @@ export default {
     },
     createShortUrl() {
       console.log('short!');
+      let _this = this
+      let originalUrl = _this.form.originalUrl
+
+      let body = {
+        originalUrl: originalUrl
+      }
+
+      axios.post('short', body)
+        .then((result) => {
+          console.log("createShortUrl", result.data)
+          let data = result.data.data
+          _this.form.shortUrl = "http://" + window.location.origin + "/" + data.shortUrl
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     },
     createAliasUrl() {
       console.log('alias!');
+      let _this = this
+      let originalUrl = _this.form.originalUrl
+      let aliasUrl = _this.form.aliasUrl
+
+      let body = {
+        originalUrl: originalUrl,
+        aliasUrl: aliasUrl
+      }
+
+      axios.post('alias', body)
+        .then((result) => {
+          console.log("createShortUrl", result.data)
+          let data = result.data.data
+          _this.form.shortUrl = "http://" + window.location.origin + "/" + data.shortUrl
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
   }
 }
@@ -62,7 +111,11 @@ export default {
 
 <style>
 .el-input {
-  width: 500px;
+  width: 550px;
+}
+
+.el-input-group__prepend {
+  width: 100px !important;
 }
 
 .el-button {
@@ -92,14 +145,6 @@ export default {
   color: #35495e;
   letter-spacing: 1px;
   margin-bottom: 20px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
 }
 
 .links {
