@@ -20,16 +20,16 @@
             </el-form-item>
 
             <el-form-item>
-              <el-button type="info" @click="createUrl" :disabled="isURL(form.originalUrl) == false">SHORTEN</el-button>
+              <el-button type="danger" :loading="isLoading" round="true" @click="createUrl" :disabled="isURL(form.originalUrl) == false">SHORTEN</el-button>
             </el-form-item>
           </div>
 
           <div class="short-url">
             <transition name="list" mode="in-out">
-              <el-form-item v-show="!hide">
+              <el-form-item v-show="!isHide">
                 <el-input readonly size="mini" type="info" placeholder="alias of the link *optional e.g. google" :value="form.shortUrl">
                   <template class="prepend" slot="prepend">short link</template>
-                  <!-- <el-button slot="append" icon="el-icon-document" style="width: 20px; padding: 0"></el-button> -->
+                  <el-button slot="append" icon="el-icon-d-arrow-right" style="width: 20px; padding: 0" @click="newTab(form.shortUrl)"></el-button>
                 </el-input>
               </el-form-item>
             </transition>
@@ -58,7 +58,8 @@ export default {
         aliasUrl: '',
         shortUrl: ''
       },
-      hide: true
+      isHide: true,
+      isLoading: false
     }
   },
   methods: {
@@ -79,17 +80,19 @@ export default {
         originalUrl: originalUrl
       }
 
-       // call createShortUrl api
+      // call createShortUrl api
+      _this.isLoading = true
       axios.post('short', body)
         .then((result) => {
           console.log('createShortUrl', result.data)
           let data = result.data.data
           setTimeout(()=> {
-              _this.hide = true
+              _this.isHide = true
               setTimeout(()=> {
-              _this.hide = false
+              _this.isHide = false
               _this.form.shortUrl = window.location.origin + '/' + data.shortUrl
               }, 300)
+              _this.isLoading = false
           }, 300)
         })
         .catch((error) => {
@@ -108,22 +111,31 @@ export default {
       }
 
       // call createAliasUrl api
+      _this.isLoading = true
       axios.post('alias', body)
         .then((result) => {
           console.log("createAliasUrl", result.data)
           let data = result.data.data
-          data.shortUrl = window.location.origin + '/' + data.shortUrl
-          // _this.form.shortUrl = 'http://' + window.location.origin + '/' + data.shortUrl
-          _this.results.push(data).shift()
+          setTimeout(()=> {
+              _this.isHide = true
+              setTimeout(()=> {
+              _this.isHide = false
+              _this.form.shortUrl = window.location.origin + '/' + data.shortUrl
+              }, 300)
+              _this.isLoading = false
+          }, 300)
         })
         .catch((error) => {
           console.log(error)
         })
     },
     isURL(str) {
-      var urlRegex = '^(?!mailto:)(?:(?:http|https|ftp)://)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$'
-      var url = new RegExp(urlRegex, 'i')
+      let urlRegex = '^(?!mailto:)(?:(?:http|https|ftp)://)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$'
+      let url = new RegExp(urlRegex, 'i')
       return str.length < 2083 && url.test(str)
+    },
+    newTab(url) {
+      window.open(url, '_blank');
     }
   }
 }
@@ -140,13 +152,7 @@ export default {
 
 .el-button {
   width: 250px;
-  background-color: #00d1b2;
   border: none;
-}
-
-.el-button:hover {
-  transition: background-color 0.5s;
-  background-color: #00c4a7;
 }
 
 .el-form-item.shortUrl-warper {
@@ -176,9 +182,7 @@ export default {
 }
 
 .form {
-  /* height: 500px; */
-  /* overflow: */
-  /* margin-bottom: 100px; */
+  margin-bottom: 100px;
 }
 
 .short-url {
