@@ -20,16 +20,20 @@
             </el-form-item>
 
             <el-form-item>
-              <el-button type="info" @click="createUrl" :disabled="true">SHORTEN</el-button>
+              <el-button type="info" @click="createUrl" :disabled="isURL(form.originalUrl) == false">SHORTEN</el-button>
             </el-form-item>
           </div>
 
-          <el-form-item v-if="form.shortUrl != ''" class="animated fadeInUp">
-            <el-input type="info" placeholder="alias of the link *optional e.g. google" v-model="form.shortUrl">
-              <template class="prepend" slot="prepend">short link</template>
-            </el-input>
-          </el-form-item>
-
+          <div class="short-url">
+            <transition name="list" mode="in-out">
+              <el-form-item v-show="!hide">
+                <el-input readonly size="mini" type="info" placeholder="alias of the link *optional e.g. google" :value="form.shortUrl">
+                  <template class="prepend" slot="prepend">short link</template>
+                  <!-- <el-button slot="append" icon="el-icon-document" style="width: 20px; padding: 0"></el-button> -->
+                </el-input>
+              </el-form-item>
+            </transition>
+          </div>
         </el-form>
       </div>
       <div class="form">
@@ -53,7 +57,8 @@ export default {
         originalUrl: '',
         aliasUrl: '',
         shortUrl: ''
-      }
+      },
+      hide: true
     }
   },
   methods: {
@@ -74,14 +79,21 @@ export default {
         originalUrl: originalUrl
       }
 
+       // call createShortUrl api
       axios.post('short', body)
         .then((result) => {
-          console.log("createShortUrl", result.data)
+          console.log('createShortUrl', result.data)
           let data = result.data.data
-          _this.form.shortUrl = "http://" + window.location.origin + "/" + data.shortUrl
+          setTimeout(()=> {
+              _this.hide = true
+              setTimeout(()=> {
+              _this.hide = false
+              _this.form.shortUrl = window.location.origin + '/' + data.shortUrl
+              }, 300)
+          }, 300)
         })
         .catch((error) => {
-          console.log(error)
+          console.error(error)
         })
     },
     createAliasUrl() {
@@ -95,15 +107,23 @@ export default {
         aliasUrl: aliasUrl
       }
 
+      // call createAliasUrl api
       axios.post('alias', body)
         .then((result) => {
-          console.log("createShortUrl", result.data)
+          console.log("createAliasUrl", result.data)
           let data = result.data.data
-          _this.form.shortUrl = "http://" + window.location.origin + "/" + data.shortUrl
+          data.shortUrl = window.location.origin + '/' + data.shortUrl
+          // _this.form.shortUrl = 'http://' + window.location.origin + '/' + data.shortUrl
+          _this.results.push(data).shift()
         })
         .catch((error) => {
           console.log(error)
         })
+    },
+    isURL(str) {
+      var urlRegex = '^(?!mailto:)(?:(?:http|https|ftp)://)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$'
+      var url = new RegExp(urlRegex, 'i')
+      return str.length < 2083 && url.test(str)
     }
   }
 }
@@ -129,6 +149,10 @@ export default {
   background-color: #00c4a7;
 }
 
+.el-form-item.shortUrl-warper {
+  margin-bottom: 0px !important;
+}
+
 .container {
   min-height: 100vh;
   display: flex;
@@ -152,6 +176,22 @@ export default {
 }
 
 .form {
-  margin-bottom: 100px;
+  /* height: 500px; */
+  /* overflow: */
+  /* margin-bottom: 100px; */
 }
+
+.short-url {
+  height: 50px;
+}
+
+.list-enter-active, .list-leave-active {
+  transition: all 0.30s;
+}
+
+.list-enter, .list-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
 </style>
