@@ -20,7 +20,7 @@
             </el-form-item>
 
             <el-form-item>
-              <el-button type="danger" :loading="isLoading" round="true" @click="createUrl" :disabled="isURL(form.originalUrl) == false">SHORTEN</el-button>
+              <el-button type="danger" :loading="isLoading" :round="true" @click="createUrl" :disabled="isURL(form.originalUrl) == false">SHORTEN</el-button>
             </el-form-item>
           </div>
 
