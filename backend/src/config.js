@@ -1,6 +1,6 @@
 module.exports = {
     server: {
-        port: 3000
+        port: 4000
     },
     mongodb: {
         url: "mongodb://localhost:27017",
