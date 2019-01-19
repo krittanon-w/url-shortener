@@ -4,7 +4,7 @@ const BaseModel = require('./../share/base-model.js')
 // init
 const router = new Router()
 
-module.exports = router.get('/:url', (req, res, next) => {
+module.exports = router.get('/original/:url', (req, res, next) => {
     try {
         let url = req.params.url
 
@@ -23,8 +23,7 @@ module.exports = router.get('/:url', (req, res, next) => {
             }
             else {
                 if (result == null) {
-                    // res.redirect('/error/404')
-                    return next()
+                    return res.redirect('/')
                 }
                 else {
                     let originalUrl = result.originalUrl

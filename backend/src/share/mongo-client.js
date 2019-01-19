@@ -1,7 +1,7 @@
 const MongoClient = require('mongodb').MongoClient
 
 // mongodb init
-const config = require('./../config.js').mongodb
+const config = require('./../../config.js').mongodb
 const url = config.url
 const database = config.database
 const options = config.options

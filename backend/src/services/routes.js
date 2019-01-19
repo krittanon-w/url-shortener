@@ -15,9 +15,7 @@ const prefixUrl = '/api'
 router.use(prefixUrl, createShortUrl)
 router.use(prefixUrl, createAliasUrl)
 router.use(prefixUrl, getAllUrl)
-
-// route
-router.use(getOriginalUrl)
+router.use(prefixUrl, getOriginalUrl)
 
 // if no path matched return 404 not found
 router.use('*', (req, res, next) => {
