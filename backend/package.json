@@ -5,8 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon node src/index.js",
-    "prod": "npm start",
+    "dev": "NODE_ENV=dev nodemon node src/index.js",
+    "prod": "NODE_ENV=prod npm start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

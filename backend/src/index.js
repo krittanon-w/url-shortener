@@ -5,7 +5,7 @@ const services = require('./services/routes.js')
 
 // express init
 const app = express()
-const config = require('./config.js').server
+const config = require('./../config.js').server
 
 app.use(bodyParser.json())
 app.use((req, res, next) => {
@@ -29,7 +29,7 @@ MongoClient.connect((error, client) => {
         console.log("MongoClient: collections", collections)
 
         // start server
-        app.listen(config.port, () => {
+        app.listen(config.port, config.host, () => {
             console.log(`Express Server: is listening on port ${config.port}`)
         })
     }
