@@ -20,7 +20,7 @@
             </el-form-item>
 
             <el-form-item>
-              <el-button type="danger" :loading="isLoading" :round="true" @click="createUrl" :disabled="isURL(form.originalUrl) == false">SHORTEN</el-button>
+              <el-button type="danger" :loading="isLoading" :round="true" @click="createUrl" :disabled="isURL(form.originalUrl) == false || isAlias(form.aliasUrl) == false">SHORTEN</el-button>
             </el-form-item>
           </div>
 
@@ -130,9 +130,22 @@ export default {
         })
     },
     isURL(str) {
+      if (str.trim() == '') {
+        return false
+      }
       let urlRegex = '^(?!mailto:)(?:(?:http|https|ftp)://)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$'
       let url = new RegExp(urlRegex, 'i')
       return str.length < 2083 && url.test(str)
+    },
+    isAlias(str) {
+      if (str.trim() == '') {
+        return true
+      }
+      else {
+        let urlRegex = '^[a-zA-Z0-9]+$'
+        let url = new RegExp(urlRegex)
+        return url.test(str)
+      }
     },
     newTab(url) {
       window.open(url, '_blank');
