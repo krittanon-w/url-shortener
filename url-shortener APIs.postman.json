@@ -1,0 +1,116 @@
+{
+	"info": {
+		"_postman_id": "347a9163-87a1-4223-9d2a-a0f6a5b00343",
+		"name": "url-shortener APIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "createShortUrl = /api/short",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"originalUrl\": \"https://github.com/krittanon-w/url-shortener\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/api/short",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"short"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createAliasUrl = /api/alias",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"originalUrl\": \"https://github.com/krittanon-w/url-shortener\",\n\t\"aliasUrl\": \"test1\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/api/alias",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"alias"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllUrl = /api/urls",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/api/urls",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"urls"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getOriginalUrl = /api/original/<url>",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}:{{port}}/api/original/",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"original",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
