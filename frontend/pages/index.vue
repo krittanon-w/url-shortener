@@ -115,15 +115,24 @@ export default {
       axios.post('alias', body)
         .then((result) => {
           console.log("createAliasUrl", result.data)
-          let data = result.data.data
-          setTimeout(()=> {
-              _this.isHide = true
-              setTimeout(()=> {
-              _this.isHide = false
-              _this.form.shortUrl = window.location.origin + '/' + data.shortUrl
-              }, 300)
+          if (result.data.success == true) {
+            let data = result.data.data
+            setTimeout(()=> {
+                _this.isHide = true
+                setTimeout(()=> {
+                _this.isHide = false
+                _this.form.shortUrl = window.location.origin + '/' + data.shortUrl
+                }, 300)
+                _this.isLoading = false
+            }, 300)
+          }
+          else {
+            _this.isHide = true
+            this.$message.error('Oops, ' + result.data.message)
+            setTimeout(()=> {
               _this.isLoading = false
-          }, 300)
+            }, 300)
+          }
         })
         .catch((error) => {
           console.log(error)
