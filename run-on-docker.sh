@@ -8,5 +8,5 @@ cd frontend
 docker build -t surl_frontend .
 cd ..
 
-./copman down
-./copman up
+./copman.sh down
+./copman.sh up

@@ -128,10 +128,15 @@ export default {
           }
           else {
             _this.isHide = true
-            this.$message.error('Oops, ' + result.data.message)
+            this.$message({
+              showClose: true,
+              message: 'Oops, ' + result.data.message,
+              type: 'error',
+              duration: 2000
+            })
             setTimeout(()=> {
               _this.isLoading = false
-            }, 300)
+            }, 2500)
           }
         })
         .catch((error) => {
