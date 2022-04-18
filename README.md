@@ -38,8 +38,5 @@ users --> nginx --|--- /[0-9a-ZA-Z]+ ----> backend container on internal link ba
 - In the Docker environment that I have created in this project, the frontend it should generate **static file** then serve on Nginx and do load balance or static cache. *in the frontend dockerfile I serve it via hot reload webserver. Because create the script to auto generate static then run on docker will take more time.
 
 ## Developer Information
-- name: Krittanon Wisedchart
-- email: krittanon.w@gmail.com
-- phone-no: Thailand +668-394-7751, 086-394-7751
 - GitHub: [github.com/krittanon-w](https://github.com/krittanon-w)
 - LinkIn: [linkedin.com/in/krittanon-w](https://linkedin.com/in/krittanon-w)
